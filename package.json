@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Varnen92/Social-Network-API#readme",
   "dependencies": {
     "express": "^4.17.2",
+    "luxon": "^2.3.0",
     "mongoose": "^6.1.9"
   }
 }
