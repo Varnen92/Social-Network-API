@@ -38,10 +38,25 @@ const thoughtController = {
         })
         .catch(err => res.json(err))
     },
+
+    // Delete a reaction to a thought
+    deleteReaction({ params}, res) {
+        Thought.findOneAndUpdate(
+            { _id: params.thoughtId },
+            { $pull: { reactions: params.reactionId} },
+            { new: true}
+            )
+            .then(dbThoughtData => {
+                if (!dbThoughtData) {
+                    res.status(404).json({ message: 'No reaction found with this id!'})
+                    return
+                }
+                res.json(dbThoughtData)
+            })
+            .catch(err => res.json(err))
+    },
     // create a new thought and push to the username's array of thoughts
     createThought({ params, body }, res) {
-        console.log(body)
-        console.log(params)
         Thought.create(body)
             .then(({ _id }) => {
                 return User.findOneAndUpdate(
@@ -73,6 +88,7 @@ const thoughtController = {
             .catch(err => res.json(err))
     },
 
+    // Delete a thought by :id
     deleteThought({ params }, res) {
         Thought.findOneAndDelete({ _id: params.id })
             .then(dbThoughtData => res.json(dbThoughtData))
