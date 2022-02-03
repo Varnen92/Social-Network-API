@@ -1,5 +1,4 @@
 const { Schema, model, Types } = require('mongoose')
-const dateFormat = require('../utils/dateFormat')
 
 const ReactionSchema = new Schema(
     {
@@ -16,15 +15,15 @@ const ReactionSchema = new Schema(
             type: String,
             required: true
         },
-        createdAt: {
+         createdAt: {
             type: Date,
             default: Date.now,
-/*             get: createdAtVal => dateFormat(createdAtVal) 
- */        }
+            get: createdAtVal => createdAtVal.toDateString()
+        } 
     },
     {
         toJSON: {
-            getters: true
+            getters: true,
         }
     }
 )
@@ -38,11 +37,11 @@ const ThoughtSchema = new Schema(
             minLength: 1,
             maxLength: 280
         },
-        createdAt: {
+         createdAt: {
             type: Date,
             default: Date.now,
-/*             get: createdAtVal => dateFormat(createdAtVal) 
- */        },
+            get: createdAtVal => createdAtVal.toDateString()
+        }, 
         username: {
             type: String,
             required: true
@@ -51,16 +50,18 @@ const ThoughtSchema = new Schema(
     },
     {
         toJSON: {
+            getters: true,
             virtuals: true,
-            getters: true
         },
         id: false
     }
 )
 
+// Virtual to display amount of reactions a Thought has
 ThoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions.length
 })
+
 
 const Thought = model('Thought', ThoughtSchema)
 
